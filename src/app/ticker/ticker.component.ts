@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-ticker',
@@ -11,19 +12,23 @@ import { Component, Input, OnInit, trigger, state, style, transition, animate } 
           marginLeft: 0,
           opacity: 1
         }),
-        animate('1000ms ease-in-out', style({
-          marginLeft: '-324px',
-          opacity: 0
-        }))
+        animate(
+          '1000ms ease-in-out',
+          style({
+            marginLeft: '-324px',
+            opacity: 0
+          })
+        )
       ])
     ])
   ]
 })
-export class TickerComponent implements OnInit {
+export class TickerComponent implements OnInit, OnChanges {
+  // tslint:disable-next-line:no-input-rename
   @Input('stocks') _stocks: any = [];
   stocks: any = [];
   interval: any;
-  page: number = 0;
+  page = 0;
 
   ngOnInit(): void {
     this.interval = setInterval(() => {
@@ -36,7 +41,10 @@ export class TickerComponent implements OnInit {
       if (this.page * 100 > this._stocks.length) {
         this.page = 0;
       }
-      let additions = this._stocks.slice(this.page * 100, (this.page + 1) * 100);
+      const additions = this._stocks.slice(
+        this.page * 100,
+        (this.page + 1) * 100
+      );
       this.stocks.push(...additions);
       this.page++;
     }
